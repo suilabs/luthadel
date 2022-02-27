@@ -1,16 +1,14 @@
 package com.suilabs.luthadel.controller;
 
-import com.suilabs.luthadel.assembler.MediaModelAssembler;
+import com.suilabs.luthadel.dtos.MediaDTO;
 import com.suilabs.luthadel.model.Media;
 import com.suilabs.luthadel.service.IMediaService;
 import com.suilabs.luthadel.service.MediaService;
-import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/media")
@@ -18,43 +16,45 @@ public class MediaController {
     @Autowired
     private final IMediaService mediaService;
 
-    private final MediaModelAssembler assembler;
-
-    MediaController(MediaService mediaService, MediaModelAssembler assembler) {
+    MediaController(MediaService mediaService) {
         this.mediaService = mediaService;
-        this.assembler = assembler;
     }
 
     @GetMapping
-    public CollectionModel<EntityModel<Media>> all()  {
-        List<Media> mediaList = mediaService.findAll();
-        return assembler.toCollectionModel(mediaList);
+    public ResponseEntity<CollectionModel<MediaDTO>> all() {
+        CollectionModel<MediaDTO> media = mediaService.findAll();
+        if (media == null) return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(media);
     }
 
     @GetMapping("/{id}")
-    public EntityModel<Media> one(@PathVariable Long id) {
-        Media media = mediaService.getById(id);
-        return assembler.toModel(media);
+    public ResponseEntity<MediaDTO> one(@PathVariable Long id) {
+        MediaDTO media = mediaService.getById(id);
+        if (media == null) return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(media);
     }
 
     @PostMapping
-    EntityModel<Media> create(@RequestBody JSONObject body) {
-        String name = body.getAsString("name");
-        String url = body.getAsString("url");
-
-        return assembler.toModel(mediaService.create(name, url));
+    ResponseEntity<MediaDTO> create(@RequestBody Media media) {
+        MediaDTO mediaDTO = mediaService.create(media);
+        return ResponseEntity.created(mediaDTO.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                .body(mediaDTO);
     }
 
     @PutMapping("/{id}")
-    EntityModel<Media> update(@RequestBody JSONObject body, @PathVariable Long id) {
-        String name = body.getAsString("name");
-        String url = body.getAsString("url");
+    ResponseEntity<MediaDTO> update(@RequestBody Media media, @PathVariable Long id) {
+        MediaDTO mediaDTO = mediaService.update(id, media);
 
-        return assembler.toModel(mediaService.update(id, name, url));
+        if (mediaDTO == null) return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(mediaDTO);
     }
 
     @DeleteMapping("/{id}")
-    void delete(@PathVariable Long id) {
+    ResponseEntity<Void> delete(@PathVariable Long id) {
         mediaService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

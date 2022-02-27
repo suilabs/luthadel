@@ -6,6 +6,7 @@ import com.suilabs.luthadel.service.IAlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,10 +37,12 @@ public class AlbumController {
     }
 
     @PostMapping
-    EntityModel<Album> create(@RequestBody Album album) {
-        Album newAlbum = albumService.create(album);
+    ResponseEntity<EntityModel<Album>> create(@RequestBody Album album) {
+        Long newId = albumService.create(album).getId();
 
-        return assembler.toModel(albumService.getById(newAlbum.getId()));
+        Album newAlbum = albumService.getById(newId);
+
+        return assembler.toCreatedModel(newAlbum);
     }
 
     @PutMapping("/{id}")
@@ -48,5 +51,8 @@ public class AlbumController {
     }
 
     @DeleteMapping("/{id}")
-    void delete(@PathVariable Long id) { albumService.delete(id); }
+    public Album delete(@PathVariable Long id) {
+        albumService.delete(id);
+        return null;
+    }
 }
