@@ -1,7 +1,6 @@
 package com.suilabs.luthadel.controller;
 
 import com.suilabs.luthadel.assembler.MediaModelAssembler;
-import com.suilabs.luthadel.exceptions.MediaNotFoundException;
 import com.suilabs.luthadel.model.Media;
 import com.suilabs.luthadel.service.IMediaService;
 import com.suilabs.luthadel.service.MediaService;
@@ -12,7 +11,6 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/media")

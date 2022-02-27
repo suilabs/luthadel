@@ -7,9 +7,8 @@ import java.util.Objects;
 @Entity
 @Table(name="media")
 public class Media {
-    //TODO check how this can be autoincrement and primary key
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "media_seq")
     private Long id;
 
     private String name;
