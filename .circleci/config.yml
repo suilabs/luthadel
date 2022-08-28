@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/gradle:7.4
+      - image: gradle:7.4
     steps:
       - checkout
       - run: gradle build --no-daemon
@@ -19,6 +19,10 @@ jobs:
     docker:
       - image: circleci/node:lts
 
+    environment:
+      LC_DB_DATABASE_NAME: ${DB_DATABASE_NAME}
+      LC_DB_USERNAME: ${DB_USERNAME}
+      LC_DB_PASSWORD: ${DB_PASSWORD}
     steps:
         - attach_workspace:
             at: /tmp/workspace
