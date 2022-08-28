@@ -6,6 +6,9 @@ services:
     environment:
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - VIRTUAL_HOST=pg.suilabs.com
+      - LETSENCRYPT_HOSTpg.=suilabs.com
+      - LETSENCRYPT_EMAIL=borja.arias.upc@gmail.com
     ports:
       - '5432:5432'
     volumes:

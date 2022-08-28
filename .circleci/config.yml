@@ -1,0 +1,44 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/gradle@7.4
+    steps:
+      - checkout
+      - run: gradle build --no-daemon
+      - run: cp ./build/libs/*.jar ./jars/spring-boot-application.jar
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - build
+  release:
+    docker:
+      - image: circleci/node:lts
+
+    steps:
+        - attach_workspace:
+            at: /tmp/workspace
+        - deploy:
+            command: |
+              sudo apt update
+              sudo apt install -y rsync
+              cd /tmp/workspace
+              cd scripts
+              bash updateRepo.sh >/dev/null
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build
+      - release:
+          context:
+            - postgres_db
+          filters:
+            branches:
+              only: primary
+          requires:
+            - build
