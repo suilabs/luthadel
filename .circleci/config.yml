@@ -29,7 +29,7 @@ jobs:
             at: /tmp/workspace
         - checkout
         - run: mkdir jars
-        - run: cp /tmp/workspace/libs ./jars
+        - run: cp -r /tmp/workspace/libs ./
         - run: ls -la
         - deploy:
             command: |
