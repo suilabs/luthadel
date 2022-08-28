@@ -26,10 +26,10 @@ jobs:
       LC_DB_PASSWORD: ${DB_PASSWORD}
     steps:
         - attach_workspace:
-            at: /tmp/jars
+            at: /tmp/workspace
         - checkout
         - run: mkdir jars
-        - run: cp /tmp/jars/* ./jars/.
+        - run: cp /tmp/workspace/libs/* ./jars/.
         - deploy:
             command: |
               sudo apt update
