@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/gradle@7.4
+      - image: circleci/gradle:7.4
     steps:
       - checkout
       - run: gradle build --no-daemon
