@@ -46,6 +46,6 @@ workflows:
             - postgres_db
           filters:
             branches:
-              only: primary
+              only: master
           requires:
             - build
