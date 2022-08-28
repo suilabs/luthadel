@@ -13,9 +13,9 @@ jobs:
       - run: mkdir jars
       - run: cp ./build/libs/*.jar ./jars/spring-boot-application.jar
       - persist_to_workspace:
-          root: workspace
+          root: build
           paths:
-            - build
+            - libs
   release:
     docker:
       - image: circleci/node:lts
@@ -26,12 +26,14 @@ jobs:
       LC_DB_PASSWORD: ${DB_PASSWORD}
     steps:
         - attach_workspace:
-            at: /tmp/workspace
+            at: /tmp/jars
+        - checkout
+        - run: mkdir jars
+        - run: cp /tmp/jars ./jars
         - deploy:
             command: |
               sudo apt update
               sudo apt install -y rsync
-              cd /tmp/workspace
               cd scripts
               bash updateRepo.sh >/dev/null
 workflows:
