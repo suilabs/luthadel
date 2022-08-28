@@ -29,7 +29,8 @@ jobs:
             at: /tmp/workspace
         - checkout
         - run: mkdir jars
-        - run: cp /tmp/workspace/libs/* ./jars/.
+        - run: cp /tmp/workspace/libs ./jars
+        - run: ls -la
         - deploy:
             command: |
               sudo apt update
