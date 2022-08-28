@@ -10,6 +10,7 @@ jobs:
     steps:
       - checkout
       - run: gradle build --no-daemon
+      - run: mkdir jars
       - run: cp ./build/libs/*.jar ./jars/spring-boot-application.jar
       - persist_to_workspace:
           root: workspace
