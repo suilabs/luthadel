@@ -29,7 +29,7 @@ jobs:
             at: /tmp/jars
         - checkout
         - run: mkdir jars
-        - run: cp /tmp/jars ./jars
+        - run: cp /tmp/jars/* ./jars/.
         - deploy:
             command: |
               sudo apt update
